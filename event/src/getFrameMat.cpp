@@ -63,9 +63,6 @@ void event(const sensor_msgs::Image &msg_img)
 
 int main(int argc, char** argv)
 {
-	
-
-
 	ros::init(argc, argv, "event");
 	ros::NodeHandle n; 
 
