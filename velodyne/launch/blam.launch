@@ -1,0 +1,39 @@
+<!-- version xxx -->
+<launch>
+
+    <group ns="blam">
+	<!-- SLAM -->
+	<node pkg="blam_slam" name="blam_slam" type="blam_slam_node" output="screen">
+	    <!-- Topics -->
+	    <remap from="~pcld" to="/velodyne_points"/>
+
+	    <!-- Initial pose -->
+	    <rosparam file="$(find velodyne)/params/blam/init_pose_params.yaml"/>
+
+	    <!-- Rates -->
+	    <rosparam file="$(find velodyne)/params/blam/blam_rates.yaml"/>
+
+	    <!-- Frames -->
+	    <rosparam file="$(find velodyne)/params/blam/blam_frames.yaml"/>
+
+	    <!-- Point cloud filter -->
+	    <rosparam file="$(find velodyne)/params/blam/filter_params.yaml"/>
+
+	    <!-- Point cloud odometry -->
+	    <rosparam file="$(find velodyne)/params/blam/odometer_params.yaml"/>
+
+	    <!-- Point cloud localization -->
+	    <rosparam file="$(find velodyne)/params/blam/localization_params.yaml"/>
+
+	    <!-- Point cloud mapper -->
+	    <rosparam file="$(find velodyne)/params/blam/mapper_params.yaml"/>
+
+	    <!-- Point cloud visualization -->
+	    <rosparam file="$(find velodyne)/params/blam/visualization_params.yaml"/>
+
+	    <!-- Loop closure -->
+	    <rosparam file="$(find velodyne)/params/blam/loop_closure_params.yaml"/>
+	</node>
+    </group>
+
+</launch>

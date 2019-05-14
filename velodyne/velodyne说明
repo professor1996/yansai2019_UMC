@@ -1,0 +1,32 @@
+参数：
+	点速率：30万/s
+	包速率：754/s
+	点数/包：384
+	转速：300-1200RPM
+	频率：5-20Hz
+	水平分辨率：0.1-0.4度（360度）
+	垂直分辨率：2度（30度）
+	注意：频率越高，水平分辨率越小，保持总点数不变
+
+消息：
+	DriverNodelet:
+		ROS driver interface for the Velodyne 3D LIDARs
+		Publisher: output_ = node.advertise<velodyne_msgs::VelodyneScan>("velodyne_packets", 10);
+	CloudNodelet: 
+		This class converts raw Velodyne 3D LIDAR packets to PointCloud2
+		Subscriber: velodyne_scan_ = node.subscribe("velodyne_packets", 10,
+                     &Convert::processScan, (Convert *) this, ros::TransportHints().tcpNoDelay(true));
+		Publisher: output_ = node.advertise<sensor_msgs::PointCloud2>("velodyne_points", 10);
+	LaserScanNodelet：
+		Subscriber: sub_ = nh_.subscribe("velodyne_points", 10, &VelodyneLaserScan::recvCallback, this);
+		Publisher: pub_ = nh.advertise<sensor_msgs::LaserScan>("scan", 10, connect_cb, connect_cb);
+	TransformNodelet：
+		This class transforms raw Velodyne 3D LIDAR packets to PointCloud2 in the /odom frame of reference
+		Subscriber: velodyne_scan_.subscribe(node, "velodyne_packets", 10);
+		Publisher: output_ = node.advertise<sensor_msgs::PointCloud2>("velodyne_points", 10);
+	RingColorsNodelet：
+		This class converts a Velodyne 3D LIDAR PointXYZIR cloud to PointXYZRGB, assigning colors for visualization of the laser rings
+		Subscriber: input_ = node.subscribe("velodyne_points", 10,
+                     &RingColors::convertPoints, this, ros::TransportHints().tcpNoDelay(true));
+		Publisher: output_ = node.advertise<sensor_msgs::PointCloud2>("velodyne_rings", 10);
+		

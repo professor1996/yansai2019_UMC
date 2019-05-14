@@ -1,0 +1,72 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+
+    ################ arguments ################
+    <arg name="sim" default="true" />
+
+    ################ set up laser data ################
+    <param name="/use_sim_time" value="$(arg sim)"/>
+    <group if="$(arg sim)">
+	<node pkg="rosbag" type="play" name="play" args="$(find velodyne)/bags/ugv-004.bag --delay=1 --clock --topics /scan /odom /tf"/>
+    </group>
+    <group unless="$(arg sim)">
+	<include file="$(find ugv_navigation)/launch/ugvdriver.launch"/>
+	<include file="$(find velodyne)/launch/velodyne.launch"/>
+    </group>
+
+    ################ publish an example base_link -> laser transform ################
+    <node pkg="tf" type="static_transform_publisher" name="base_link_to_laser" args="0.1 0 0 -1.28 0 0 /base_link /velodyne 100" />
+
+    <!--################ start the laser scan_matcher ################
+    <node pkg="laser_scan_matcher" type="laser_scan_matcher_node" name="laser_scan_matcher_node" output="screen">
+	<param name="fixed_frame" value = "odom"/>
+	<param name="max_iterations" value="10"/>
+	<param name="publish_pose_stamped" value="true"/>
+	<remap from="pose_stamped" to="pose"/>
+    </node>-->
+
+    ################ draw path ################
+    <node pkg="ugv_navigation" type="path_node" name="path_node" output="screen">
+	<param name="fixed_frame" value="map"/>
+        <param name="use_odom" value="true"/>
+    </node>
+
+    ################ start gmapping ################
+    <node pkg="gmapping" type="slam_gmapping" name="slam_gmapping" output="screen">
+	<param name="base_frame" value="base_link"/>
+	<param name="map_frame" value="map"/>
+	<param name="odom_frame" value="odom"/>
+	<param name="map_udpate_interval" value="1.0"/>
+	<param name="linearUpdate" value="1.0"/>
+	<param name="angularUpdate" value="0.5"/>
+	<param name="temporalUpdate" value="0.4"/>
+	<param name="maxUrange" value="80.0"/>
+	<param name="sigma" value="0.1"/>
+	<param name="kernelSize" value="1"/>
+	<param name="lstep" value="0.15"/>
+	<param name="astep" value="0.15"/>
+	<param name="iterations" value="1"/>
+	<param name="lsigma" value="0.1"/>
+	<param name="ogain" value="3.0"/>
+	<param name="lskip" value="1"/>
+	<param name="srr" value="0.1"/>
+	<param name="srt" value="0.2"/>
+	<param name="str" value="0.1"/>
+	<param name="stt" value="0.2"/>
+	<param name="resampleThreshold" value="0.5"/>
+	<param name="particles" value="30"/>
+	<param name="xmin" value="-5.0"/>
+	<param name="ymin" value="-5.0"/>
+	<param name="xmax" value="5.0"/>
+	<param name="ymax" value="5.0"/>
+	<param name="delta" value="0.02"/>
+	<param name="llsamplerange" value="0.01"/>
+	<param name="llsamplestep" value="0.05"/>
+	<param name="lasamplerange" value="0.05"/>
+	<param name="lasamplestep" value="0.05"/>
+    </node>
+
+    ################ start rviz ################
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find velodyne)/rviz/gmapping.rviz"/>
+
+</launch>

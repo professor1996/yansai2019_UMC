@@ -1,0 +1,25 @@
+<!-- -*- mode: XML -*- -->
+<launch>
+
+    ################ arguments ################
+    <arg name="sim" default="false" />
+
+    ################ set up laser data ################
+    <group if="$(arg sim)">
+	<param name="/use_sim_time" value="true"/>
+	<node pkg="rosbag" type="play" name="play" args="$(find velodyne)/bags/velodyne-001.bag --clock --topics /velodyne_points"/>
+    </group>
+    <group unless="$(arg sim)">
+	<include file="$(find velodyne)/launch/velodyne.launch">
+	    <arg name="pcap" value="$(find velodyne)/bags/Velodyne-VLP_10Hz_County_Fair.pcap"/>
+	</include>
+    </group>
+
+
+    ################ start blam ################
+    <include file="$(find velodyne)/launch/blam.launch" />
+
+    ################ start rviz ################
+    <node pkg="rviz" type="rviz" name="rviz" args="-d $(find velodyne)/rviz/blam_velodyne.rviz"/>
+
+</launch>
