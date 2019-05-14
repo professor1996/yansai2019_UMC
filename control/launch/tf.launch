@@ -1,0 +1,8 @@
+<launch>
+<node pkg="control" type="control_node" name="control" output="screen">
+<!--<remap from="uwb_odom" to="odom"/>-->
+</node>
+<node pkg="control" type="odom_broadcaster" name="odom_broadcaster"/>
+<node pkg="control" type="enemy_listen" name="enemy_listen"/>
+<node pkg="planning" type="makeplan" name="makeplan"/>
+</launch>
