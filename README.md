@@ -7,3 +7,20 @@
 
 # Localization and Navigation
 ![image](https://github.com/professor1996/UAV_detection-unmanned-vehicle/blob/master/demo/gif/1.gif)
+
+
+# Multi-channel Fusion Module (MCFM)
+![image](https://github.com/professor1996/UAV_detection-unmanned-vehicle/blob/master/demo/gif/2.gif)
+
+
+# UAV Detection
+![image](https://github.com/professor1996/UAV_detection-unmanned-vehicle/blob/master/demo/gif/3.gif)
+
+
+# UAV Visual Tracking
+![image](https://github.com/professor1996/UAV_detection-unmanned-vehicle/blob/master/demo/gif/4.gif)
+
+
+# System Demo
+![image](https://github.com/professor1996/UAV_detection-unmanned-vehicle/blob/master/demo/gif/5.gif)
+
